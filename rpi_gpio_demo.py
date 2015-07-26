@@ -6,10 +6,10 @@ import time
 factory = rpi_gpio.KeypadFactory()
 keypad = factory.create_4_by_3_keypad() # makes assumptions about keypad layout and GPIO pin numbers
 
-def printKey(key):
+def print_key(key):
 	print(key)
 
-keypad.registerKeyPressHandler(printKey)
+keypad.registerKeyPressHandler(print_key)
 
 try:
 	print("Press buttons on your keypad. Ctrl+C to exit.")
