@@ -6,6 +6,6 @@ setup(name="pad4pi",
 	url="https://github.com/brettmclean/pad4pi",
 	author="Brett McLean",
 	author_email="brettrmclean@gmail.com",
-	license="GPLv3",
+	license="LGPLv3",
 	packages=["pad4pi"]
 	)
