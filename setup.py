@@ -7,5 +7,8 @@ setup(name="pad4pi",
 	author="Brett McLean",
 	author_email="brettrmclean@gmail.com",
 	license="LGPLv3",
-	packages=["pad4pi"]
+	packages=["pad4pi"],
+	install_requires=[
+		"RPi.GPIO"
+	]
 	)
