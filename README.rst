@@ -33,7 +33,8 @@ Usage
 
 	factory = rpi_gpio.KeypadFactory()
 
-	# Try factory.create_4_by_3_keypad and factory.create_4_by_4_keypad for reasonable defaults
+	# Try factory.create_4_by_3_keypad 
+	# and factory.create_4_by_4_keypad for reasonable defaults
 	keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PINS)
 
 	def printKey(key):
