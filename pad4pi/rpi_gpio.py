@@ -66,6 +66,12 @@ class Keypad():
 	def registerKeyPressHandler(self, handler):
 		self._handlers.append(handler)
 
+	def unregisterKeyPressHandler(self, handler):
+		self._handlers.remove(handler)
+
+	def clearKeyPressHandlers(self):
+		self._handlers = []
+
 	def _onKeyPress(self, channel):
 		keyPressed = self.getKey()
 		if keyPressed is not None:
