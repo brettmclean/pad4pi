@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
 import RPi.GPIO as GPIO
+import time
+
+DEFAULT_KEY_DELAY = 300
 
 class KeypadFactory():
 
-	def create_keypad(self, keypad=None, row_pins=None, col_pins=None):
+	def create_keypad(self, keypad=None, row_pins=None, col_pins=None, key_delay=DEFAULT_KEY_DELAY):
 
 		if keypad is None:
 			keypad = [
@@ -20,7 +23,7 @@ class KeypadFactory():
 		if col_pins is None:
 			col_pins = [18,27,22]
 
-		return Keypad(keypad, row_pins, col_pins)
+		return Keypad(keypad, row_pins, col_pins, key_delay)
 
 	def create_4_by_3_keypad(self):
 
@@ -51,12 +54,15 @@ class KeypadFactory():
 		return self.create_keypad(KEYPAD, ROW_PINS, COL_PINS)
 
 class Keypad():
-	def __init__(self, keypad, row_pins, col_pins):
+	def __init__(self, keypad, row_pins, col_pins, key_delay=DEFAULT_KEY_DELAY):
 		self._handlers = []
 
 		self._keypad = keypad
 		self._row_pins = row_pins
 		self._col_pins = col_pins
+		self._key_delay = key_delay
+
+		self._last_key_press_time = 0
 
 		GPIO.setmode(GPIO.BCM)
 
@@ -73,16 +79,21 @@ class Keypad():
 		self._handlers = []
 
 	def _onKeyPress(self, channel):
+		currTime = self.getTimeInMillis()
+		if currTime < self._last_key_press_time + self._key_delay:
+			return
+
 		keyPressed = self.getKey()
 		if keyPressed is not None:
 			for handler in self._handlers:
 				handler(keyPressed)
+			self._last_key_press_time = currTime
 
 	def _setRowsAsInput(self):
 		# Set all rows as input
 		for i in range(len(self._row_pins)):
 			GPIO.setup(self._row_pins[i], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-			GPIO.add_event_detect(self._row_pins[i], GPIO.FALLING, callback=self._onKeyPress, bouncetime=300)
+			GPIO.add_event_detect(self._row_pins[i], GPIO.FALLING, callback=self._onKeyPress, bouncetime=self._key_delay)
 
 	def _setColumnsAsOutput(self):
 		# Set all columns as output low
@@ -119,3 +130,6 @@ class Keypad():
 
 	def cleanup(self):
 		GPIO.cleanup()
+
+	def getTimeInMillis(self):
+		return time.time() * 1000
