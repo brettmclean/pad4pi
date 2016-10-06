@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name="pad4pi",
-    version="1.1.1",
+    version="1.1.2",
     description="Interrupt-based matrix keypad library for Raspberry Pi",
     long_description=readme(),
     url="https://github.com/brettmclean/pad4pi",
