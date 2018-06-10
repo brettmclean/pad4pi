@@ -7,6 +7,7 @@ from threading import Timer
 DEFAULT_KEY_DELAY = 300
 DEFAULT_REPEAT_DELAY = 1.0
 DEFAULT_REPEAT_RATE = 1.0
+DEFAULT_DEBOUNCE_TIME = 10
 
 class KeypadFactory():
 
@@ -124,7 +125,7 @@ class Keypad():
         # Set all rows as input
         for i in range(len(self._row_pins)):
             GPIO.setup(self._row_pins[i], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(self._row_pins[i], GPIO.FALLING, callback=self._onKeyPress, bouncetime=self._key_delay)
+            GPIO.add_event_detect(self._row_pins[i], GPIO.FALLING, callback=self._onKeyPress, bouncetime=DEFAULT_DEBOUNCE_TIME)
 
     def _setColumnsAsOutput(self):
         # Set all columns as output low
@@ -150,7 +151,9 @@ class Keypad():
             for i in range(len(self._col_pins)):
                 GPIO.output(self._col_pins[i], GPIO.HIGH)
                 if GPIO.input(self._row_pins[rowVal]) == GPIO.HIGH:
+                    GPIO.output(self._col_pins[i], GPIO.LOW)
                     colVal = i
+                    break
                 GPIO.output(self._col_pins[i], GPIO.LOW)
 
         # Determine pressed key, if any
