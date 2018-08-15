@@ -11,7 +11,7 @@ DEFAULT_DEBOUNCE_TIME = 10
 
 class KeypadFactory():
 
-    def create_keypad(self, keypad=None, row_pins=None, col_pins=None, key_delay=DEFAULT_KEY_DELAY, repeat=False, repeat_delay=None, repeat_rate=None):
+    def create_keypad(self, keypad=None, row_pins=None, col_pins=None, key_delay=DEFAULT_KEY_DELAY, repeat=False, repeat_delay=None, repeat_rate=None, gpio_mode=GPIO.BCM):
 
         if keypad is None:
             keypad = [
@@ -27,7 +27,7 @@ class KeypadFactory():
         if col_pins is None:
             col_pins = [18,27,22]
 
-        return Keypad(keypad, row_pins, col_pins, key_delay, repeat, repeat_delay, repeat_rate)
+        return Keypad(keypad, row_pins, col_pins, key_delay, repeat, repeat_delay, repeat_rate, gpio_mode)
 
     def create_4_by_3_keypad(self):
 
@@ -58,7 +58,7 @@ class KeypadFactory():
         return self.create_keypad(KEYPAD, ROW_PINS, COL_PINS)
 
 class Keypad():
-    def __init__(self, keypad, row_pins, col_pins, key_delay=DEFAULT_KEY_DELAY, repeat=False, repeat_delay=None, repeat_rate=None):
+    def __init__(self, keypad, row_pins, col_pins, key_delay=DEFAULT_KEY_DELAY, repeat=False, repeat_delay=None, repeat_rate=None,gpio_mode=GPIO.BCM):
         self._handlers = []
 
         self._keypad = keypad
@@ -83,7 +83,7 @@ class Keypad():
         self._last_key_press_time = 0
         self._first_repeat = True
 
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(gpio_mode)
 
         self._setRowsAsInput()
         self._setColumnsAsOutput()
